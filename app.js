@@ -1,4 +1,3 @@
-
 // Entry Point
 
 // Module Imports
@@ -9,6 +8,10 @@ const os = require('os');
 const path = require('path');
 const EventEmitter = require('events');
 const http = require('http');
+const mongoose = require('mongoose')
+const db = require('./database');
+const UserModel = require('./models/user');
+const express = require('express')
 
 /*
 const sciFuncs = new Scientific();
@@ -67,6 +70,7 @@ sciFuncs.cubeRoot();
  */
 
 // Sample Usage of http Module
+/*
 const hostname = '127.0.0.1';
 const port = 3000;  // For deployments we use 8080 or 80443
 
@@ -100,3 +104,70 @@ const server = http.createServer((req, res) => {
 server.listen(port, hostname, () => {
     console.log(`Server running at https://${hostname}:${port}/`)
 })
+*/
+
+
+// Creating a User
+// let user = new UserModel({
+//     fname: 'Jane',
+//     lname: 'Doe',
+//     email: 'def@xyz.com'
+// });
+
+/*
+user.save().then(
+    (doc) => {
+        console.log(doc);
+    }
+).catch(
+    (err) => {
+        console.log(err);
+    }
+).finally(() => {
+        mongoose.disconnect().then(() => {
+            console.log('Connection Closed ...!');
+        }).catch((err) => {
+            console.log(err);
+        });
+    }
+)
+*/
+
+/*
+UserModel
+    .find({
+        fname: 'Jane'   // search query
+    })
+    .then(doc => {
+        console.log(doc)
+    })
+    .catch(err => {
+        console.error(err)
+    }).finally(() => {
+        mongoose.disconnect().then(() => {
+            console.log('Connection Closed ...!');
+        }).catch((err) => {
+            console.log(err);
+        });
+    }
+)
+ */
+
+function getAllUsers() {
+    return UserModel.find()
+}
+
+
+
+const app = express()
+
+app.get('/users', (req, res) => {
+    getAllUsers().then((doc) => {
+        res.send(JSON.stringify(doc));
+    }).catch(err => {
+        res.send(JSON.stringify(err));
+    })
+
+})
+
+app.listen(3000, () => console.log('Server ready'))
